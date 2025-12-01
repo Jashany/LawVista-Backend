@@ -9,6 +9,7 @@ import authRouter from './routes/auth.routes.js';
 import noteBookRouter from './routes/notebook.routes.js';
 import chatRouter from './routes/chat.routes.js';
 import docRouter from './routes/doc.routes.js';
+import summarizeRouter from './routes/summarize.routes.js';
 import axios from 'axios';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import Case from './models/case.model.js';
@@ -78,9 +79,9 @@ app.use(mongoSanitizer);
 // HTTP Parameter Pollution protection
 app.use(hppProtection);
 
-// General rate limiting and speed control
-app.use(generalLimiter);
-app.use(speedLimiter);
+// // General rate limiting and speed control
+// app.use(generalLimiter);
+// app.use(speedLimiter);
 
 // Parse incoming JSON requests with size limit
 app.use(express.json({ limit: '10mb' })); 
@@ -97,6 +98,7 @@ app.use(cookieParser());
 app.use('/api/cases', caseRouter);
 app.use("/api/auth", authLimiter, authRouter);
 app.use("/api/chat", chatLimiter, chatRouter);
+app.use("/api/summarize", chatLimiter, summarizeRouter);
 app.use("/api/notebook", noteBookRouter);
 app.use("/api/doc", docRouter);
 

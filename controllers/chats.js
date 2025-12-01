@@ -126,19 +126,13 @@ export const updateChat = async (req, res) => {
       return res.status(400).json({ message: "User message is required" });
     }
 
-    // --- Setup for Server-Sent Events (SSE) ---
-    res.setHeader('Content-Type', 'text/event-stream');
-    res.setHeader('Cache-Control', 'no-cache');
-    res.setHeader('Connection', 'keep-alive');
-    res.flushHeaders(); // Flush the headers to establish the connection
-
-    // --- Database Logic (remains mostly the same) ---
+    // --- Pre-SSE validation (must happen BEFORE headers are sent) ---
     let chat = await Chats.findOne({ chatId });
     if (!chat) {
       chat = await Chats.create({ chatId, user: req.user._id });
     }
     if (req.user._id.toString() !== chat.user.toString()) {
-      return res.status(401).end(); // Just end the stream on auth error
+      return res.status(401).json({ message: "Unauthorized" });
     }
 
     const user = await User.findById(req.user._id);
@@ -148,8 +142,17 @@ export const updateChat = async (req, res) => {
         success: false,
       });
     }
+
+    // --- Setup for Server-Sent Events (SSE) - AFTER validation ---
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+    res.flushHeaders(); // Flush the headers to establish the connection
+
+    // --- Update user usage count ---
     user.uses += 1;
     await user.save();
+    
     const userMsg = {
       user: userMessage,
       ai: undefined,

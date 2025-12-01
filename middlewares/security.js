@@ -20,7 +20,7 @@ export const generalLimiter = rateLimit({
 // Strict rate limiting for authentication endpoints
 export const authLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 5, // limit each IP to 5 requests per windowMs for auth endpoints
+    max: 20, // limit each IP to 5 requests per windowMs for auth endpoints
     message: {
         error: 'Too many authentication attempts from this IP, please try again after 15 minutes.',
         success: false
@@ -45,7 +45,7 @@ export const passwordResetLimiter = rateLimit({
 // Chat/AI endpoint rate limiting
 export const chatLimiter = rateLimit({
     windowMs: 60 * 1000, // 1 minute
-    max: 10, // limit each IP to 10 chat requests per minute
+    max: 50, // limit each IP to 10 chat requests per minute
     message: {
         error: 'Too many chat requests, please slow down.',
         success: false
@@ -281,7 +281,7 @@ export const securityLogger = (req, res, next) => {
     if (isSuspicious) {
         console.warn(`🚨 SUSPICIOUS REQUEST: ${timestamp} | IP: ${ip} | ${method} ${url} | User-Agent: ${userAgent}`);
     } else {
-        console.log(`📝 REQUEST: ${timestamp} | IP: ${ip} | ${method} ${url}`);
+        console.log(`📝 REQUEST: ${timestamp} | IP: ${ip} | ${method} ${url} `);
     }
     
     next();

@@ -2,7 +2,7 @@ APP_NAME=lawapi-backend
 IMAGE_NAME=jashanpreet/lawapi-backend
 CONTAINER_NAME=lawapi-backend
 NGINX_CONF=lawVista.conf
-DOMAIN=lawapi.jsondev.in
+DOMAIN=lawapi.artvoo.in
 EMAIL=jashan.maybe76@gmail.com  # used for certbot registration
 
 .PHONY: build run stop setup-nginx enable-https renew-certs

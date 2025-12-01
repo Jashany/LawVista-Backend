@@ -14,10 +14,18 @@ const documentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  paths:[
+  paths: [
     {
-      type: String,
-    }
+      case_title: {
+        type: String,
+      },
+      source_url: {
+        type: String,
+      },
+      score: {
+        type: Number,
+      },
+    },
   ],
   judgement: {
     type: String,

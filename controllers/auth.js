@@ -9,23 +9,36 @@ import User from "../models/user.model.js";
 // @access  Public
 
 const authUser = asyncHandler(async (req, res) => {
+  try {
   const { password } = req.body;
   const email = req.body.email.toLowerCase();
   const user = await User.findOne({ email });
 
-  if (user && (await user.matchPassword(password))) {
-    generateToken(res, user);
-    return res.status(201).json({
-      message: "User logged in",
-      success: true,
-      data: {
-        _id: user._id,
-        email: user.email,
-        name: user.name,
-      },
+    
+
+    if (user && (await user.matchPassword(password))) {
+      generateToken(res, user);
+      return res.status(201).json({
+        message: "User logged in",
+        success: true,
+        data: {
+          _id: user._id,
+          email: user.email,
+          name: user.name,
+        },
+      });
+    } else {
+      return res.status(401).json({
+        message: "Invalid email or password",
+        success: false,
+      });
+    }
+        
+  } catch (error) {
+    return res.status(500).json({
+      message: "Server error",
+      success: false,
     });
-  } else {
-    return res.status(401);
   }
 });
 

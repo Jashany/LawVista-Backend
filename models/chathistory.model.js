@@ -1,15 +1,21 @@
 import mongoose from "mongoose";
 
+// Schema for source objects with case metadata
+const SourceSchema = new mongoose.Schema({
+    case_id: String,
+    case_title: String,
+    source_url: String,
+    r2_url: String,
+    court: String,
+    judge: String,
+    year: Number,
+}, { _id: false });
 
 const AiChatHistory = {
     text : {
         type: String,
     },
-    sources : [
-        {
-            type: String,
-        },
-    ],
+    sources : [SourceSchema],
 }
 
 const chatHistorySchema = new mongoose.Schema({
